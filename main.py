@@ -1,15 +1,7 @@
 from fastapi import FastAPI
 from typing import Optional
-from pydantic import BaseModel
 import uvicorn
-
-
-class user(BaseModel):
-    name: str
-    email: str
-    password: str
-    is_admin: Optional[bool] = False
-    is_super_admin: Optional[bool] = False
+import schemas
 
 
 app = FastAPI()
@@ -29,7 +21,7 @@ def get_a_single_user(id: int, qry: Optional[str] = None):
 
 
 @app.post("/user/create/")
-def create_user(user: user):
+def create_user(user: schemas.user):
     return user
 
 
