@@ -3,8 +3,9 @@ from typing import Optional
 
 
 class User(BaseModel):
+    # id: int
     name: str
     email: str
     password: str
-    is_admin: Optional[bool] = False
-    is_super_admin: Optional[bool] = False
+    is_active: bool
+    type: str

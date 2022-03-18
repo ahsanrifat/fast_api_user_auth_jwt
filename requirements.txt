@@ -2,3 +2,4 @@ SQLAlchemy
 fastapi
 uvicorn
 black
+psycopg2-binary
