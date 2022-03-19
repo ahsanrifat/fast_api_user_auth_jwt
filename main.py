@@ -65,7 +65,11 @@ def get_a_single_user(
 
 @app.put("/user/{id}", status_code=status.HTTP_202_ACCEPTED)
 def update_an_user(id, request_body: schemas.User, db: Session = Depends(get_db)):
-    db.query(models.User).filter(models.User.id == id).update(
+    user = db.query(models.User).filter(models.User.id == id)
+    if not user.first():
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"status": False, "message": f"No user found with id {id}"}
+    user.update(
         {
             "name": request_body.name,
             "password": request_body.password,
