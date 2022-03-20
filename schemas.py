@@ -11,10 +11,20 @@ class User(BaseModel):
     type: str
 
 
+class Item(BaseModel):
+    title: str
+    description: str
+    owner_id: int
+
+    class Config:
+        orm_mode = True
+
+
 class UserView(BaseModel):
     id: int
     name: str
     email: str
+    items: List[Item]
 
     class Config:
         orm_mode = True
@@ -28,18 +38,7 @@ class UserViewList(BaseModel):
         orm_mode = True
 
 
-class Item(BaseModel):
-    id: int
-    title: str
-    description: str
-    owner_id: int
-
-    class Config:
-        orm_mode = True
-
-
 class ItemView(BaseModel):
-    id: int
     title: str
     description: str
     owner: UserView
