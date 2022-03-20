@@ -26,3 +26,23 @@ class UserViewList(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Item(BaseModel):
+    id: int
+    title: str
+    description: str
+    owner_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class ItemView(BaseModel):
+    id: int
+    title: str
+    description: str
+    owner: UserView
+
+    class Config:
+        orm_mode = True

@@ -110,5 +110,27 @@ def create_user(user: schemas.User, db: Session = Depends(get_db)):
     return new_user
 
 
+# items APIs
+
+
+@app.post(
+    "/item/create/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=schemas.ItemView,
+    tags=["Item"],
+)
+def create_item(request: schemas.Item, db: Session = Depends(get_db)):
+    new_item = models.Item(
+        title=request.title,
+        description=request.description,
+        owner_id=request.owner_id,
+    )
+    # new_user = models.User(user)  # this does not work
+    db.add(new_item)
+    db.commit()
+    db.refresh(new_item)
+    return new_item
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=9000)
