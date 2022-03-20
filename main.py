@@ -34,7 +34,7 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/user", response_model=schemas.UserViewList)
+@app.get("/user", response_model=schemas.UserViewList, tags=["user"])
 def get_all_users_list(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
     # return users
@@ -42,14 +42,19 @@ def get_all_users_list(db: Session = Depends(get_db)):
     return schemas.UserViewList(status=True, user_list=users)
 
 
-@app.delete("/user/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/user/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["user"])
 def delete_an_user(id, db: Session = Depends(get_db)):
     db.query(models.User).filter(models.User.id == id).delete(synchronize_session=False)
     db.commit()
     return {"status": True, "message": f"User {id} deleted successfully"}
 
 
-@app.get("/user/{id}", status_code=status.HTTP_200_OK, response_model=schemas.UserView)
+@app.get(
+    "/user/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=schemas.UserView,
+    tags=["user"],
+)
 def get_a_single_user(
     id: int,
     response: Response,
@@ -68,7 +73,7 @@ def get_a_single_user(
     # return {"data": user}
 
 
-@app.put("/user/{id}", status_code=status.HTTP_202_ACCEPTED)
+@app.put("/user/{id}", status_code=status.HTTP_202_ACCEPTED, tags=["user"])
 def update_an_user(id, request_body: schemas.User, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id)
     if not user.first():
@@ -88,7 +93,7 @@ def update_an_user(id, request_body: schemas.User, db: Session = Depends(get_db)
     return {"status": True, "message": f"User {id} updated successfully"}
 
 
-@app.post("/user/create/", status_code=status.HTTP_201_CREATED)
+@app.post("/user/create/", status_code=status.HTTP_201_CREATED, tags=["user"])
 def create_user(user: schemas.User, db: Session = Depends(get_db)):
     hashed_password = hash_password(user.password)
     new_user = models.User(
