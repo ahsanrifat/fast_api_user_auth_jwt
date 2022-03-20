@@ -6,7 +6,8 @@ import schemas
 import models
 import database
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
+from hashing import hash_password
+
 
 models.Base.metadata.create_all(database.engine)
 
@@ -87,13 +88,9 @@ def update_an_user(id, request_body: schemas.User, db: Session = Depends(get_db)
     return {"status": True, "message": f"User {id} updated successfully"}
 
 
-# password hashing
-pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 @app.post("/user/create/", status_code=status.HTTP_201_CREATED)
 def create_user(user: schemas.User, db: Session = Depends(get_db)):
-    hashed_password = pwd_cxt.hash(user.password)
+    hashed_password = hash_password(user.password)
     new_user = models.User(
         name=user.name,
         password=hashed_password,
