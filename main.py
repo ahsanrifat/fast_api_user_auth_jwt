@@ -32,10 +32,12 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/user")
+@app.get("/user", response_model=schemas.UserViewList)
 def get_all_users_list(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
-    return {"data": users}
+    # return users
+    # return {"data": users}
+    return schemas.UserViewList(status=True, user_list=users)
 
 
 @app.delete("/user/{id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -45,7 +47,7 @@ def delete_an_user(id, db: Session = Depends(get_db)):
     return {"status": True, "message": f"User {id} deleted successfully"}
 
 
-@app.get("/user/{id}")
+@app.get("/user/{id}", status_code=status.HTTP_200_OK, response_model=schemas.UserView)
 def get_a_single_user(
     id: int,
     response: Response,
@@ -60,7 +62,8 @@ def get_a_single_user(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={"status": False, "message": f"No user found with id {id}"},
         )
-    return {"data": user}
+    return user
+    # return {"data": user}
 
 
 @app.put("/user/{id}", status_code=status.HTTP_202_ACCEPTED)
