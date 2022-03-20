@@ -6,14 +6,13 @@ from sqlalchemy.orm import Session
 from urllib import response
 from typing import Optional
 
-router = APIRouter()
+router = APIRouter(prefix="/item", tags=["Items APIs"])
 
 
 @router.post(
-    "/item/create/",
+    "/create",
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.ItemView,
-    tags=["Item"],
 )
 def create_item(request: schemas.Item, db: Session = Depends(get_db)):
     new_item = models.Item(
